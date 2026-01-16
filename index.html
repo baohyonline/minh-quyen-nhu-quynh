@@ -3490,8 +3490,8 @@
         #SHAPE5 {
             width: 32.9974px;
             height: 34.914px;
-            top: 120px;
-            left: 371.169px;
+            top: 150px;
+            left: 131.169px;
         }
 
         #SHAPE5.ladi-animation>.ladi-shape {
@@ -3797,15 +3797,6 @@
             left: 360px;
         }
 
-        #HEADLINE80>.ladi-headline {
-            font-family: Philosopher, sans-serif;
-            font-size: 16px;
-            line-height: 1;
-            color: rgb(255, 255, 255);
-            text-transform: uppercase;
-            text-align: center;
-        }
-
         #HEADLINE81 {
             top: 157px;
             left: 0px;
@@ -3819,6 +3810,15 @@
         #HEADLINE83 {
             top: 157px;
             left: 120px;
+        }
+
+        #HEADLINE83>.ladi-headline {
+            font-family: Philosopher, sans-serif;
+            font-size: 16px;
+            line-height: 1;
+            color: rgb(255, 255, 255);
+            text-transform: uppercase;
+            text-align: center;
         }
 
         #HEADLINE84 {
@@ -5022,7 +5022,7 @@
         }
     </style>
 
-    <audio id="background-music" loop="">
+    <audio id="background-music" loop="" muted="muted" autoplay>
         <source src="music/leduong.mp3">
     </audio>
 
@@ -5045,20 +5045,27 @@
             let touchStartX = 0;
             let touchStartY = 0;
 
-            // Phát nhạc lần đầu
+            // Unmute khi người dùng tương tác lần đầu
+            function unmuteOnFirstInteraction() {
+                if (audio.muted) {
+                    audio.muted = false;
+                    console.log("Bật tiếng nhạc");
+                }
+            }
+
+            // Phát nhạc lần đầu (muted để bypass autoplay policy)
             function startMusic() {
                 if (!hasStarted) {
-                    setTimeout(() => {
-                        audio.play().then(() => {
-                            isPlaying = true;
-                            hasStarted = true;
-                            playIcon.style.display = "none";
-                            pauseIcon.style.display = "block";
-                            toggleButton.classList.add("vibrating");
-                        }).catch((e) => {
-                            console.warn("Không thể phát nhạc tự động:", e);
-                        });
-                    }, 100); // Delay 100ms để đảm bảo trang đã load xong
+                    audio.muted = true; // Muted để pass autoplay
+                    audio.play().then(() => {
+                        isPlaying = true;
+                        hasStarted = true;
+                        playIcon.style.display = "none";
+                        pauseIcon.style.display = "block";
+                        toggleButton.classList.add("vibrating");
+                    }).catch((e) => {
+                        console.warn("Không thể phát nhạc tự động:", e);
+                    });
                 }
             }
 
@@ -5094,7 +5101,14 @@
             // Gộp các sự kiện
             document.body.addEventListener("touchstart", handleUserInteractionStart);
             document.body.addEventListener("touchend", handleUserInteractionEnd);
-            document.body.addEventListener("pointerdown", startMusic, { once: true });
+            document.body.addEventListener("pointerdown", () => {
+                startMusic();
+                unmuteOnFirstInteraction();
+            }, { once: true });
+            
+            // Unmute khi click bất kỳ đâu
+            document.body.addEventListener("click", unmuteOnFirstInteraction);
+            document.body.addEventListener("touchend", unmuteOnFirstInteraction);
 
             // Nút toggle bật/tắt
             toggleButton.addEventListener("click", function (event) {
@@ -5107,6 +5121,7 @@
                     pauseIcon.style.display = "none";
                     toggleButton.classList.remove("vibrating");
                 } else {
+                    audio.muted = false; // Unmute khi bật lại
                     audio.play().then(() => {
                         isPlaying = true;
                         playIcon.style.display = "none";
@@ -5117,6 +5132,9 @@
                     });
                 }
             });
+            
+            // Gọi ngay để load trang autoplay muted
+            startMusic();
         });
     </script>
 
@@ -5188,7 +5206,7 @@
                     </div>
                 </div>
                 <div id="HEADLINE5" class='ladi-element'>
-                    <h3 class='ladi-headline ladi-transition'>10:30<br>Chủ Nhật<br></h3>
+                    <h3 class='ladi-headline ladi-transition'><br>Thứ Tư<br></h3>
                 </div>
                 <div id="LINE1" class='ladi-element'>
                     <div class='ladi-line'>
@@ -5196,7 +5214,7 @@
                     </div>
                 </div>
                 <div id="HEADLINE6" class='ladi-element'>
-                    <h3 class='ladi-headline ladi-transition'>26 . 10 . 2025<br></h3>
+                    <h3 class='ladi-headline ladi-transition'>28 . 01 . 2026<br></h3>
                 </div>
             </div>
         </div>
@@ -5339,16 +5357,16 @@
                             <h3 class='ladi-headline'>TIỆC cưới nhà trai</h3>
                         </div>
                         <div id="HEADLINE22" class='ladi-element'>
-                            <h3 class='ladi-headline'>Chủ Nhật | 10:30</h3>
+                            <h3 class='ladi-headline'>Thứ Tư</h3>
                         </div>
                         <div id="HEADLINE23" class='ladi-element'>
-                            <h3 class='ladi-headline'>26 . 10 . 2025</h3>
+                            <h3 class='ladi-headline'>28 . 01 . 2026</h3>
                         </div>
                         <div id="HEADLINE24" class='ladi-element'>
                             <h3 class='ladi-headline'>Tại: Tư Gia Nhà Trai</h3>
                         </div>
                         <div id="HEADLINE25" class='ladi-element'>
-                            <h3 class='ladi-headline'>(Tức ngày 06 tháng 09 năm Ất Tỵ )</h3>
+                            <h3 class='ladi-headline'>(Tức ngày 20 tháng 12 năm Ất Tỵ )</h3>
                         </div>
                         <div data-action="true" id="BUTTON3" class='ladi-element'>
                             <div class='ladi-button ladi-transition'>
@@ -5369,16 +5387,16 @@
                             <h3 class='ladi-headline'>TIỆC cưới nhà GÁI</h3>
                         </div>
                         <div id="HEADLINE101" class='ladi-element'>
-                            <h3 class='ladi-headline'>Thứ Bảy | 10:30</h3>
+                            <h3 class='ladi-headline'>Thứ Ba</h3>
                         </div>
                         <div id="HEADLINE102" class='ladi-element'>
-                            <h3 class='ladi-headline'>25 . 10 . 2025</h3>
+                            <h3 class='ladi-headline'>27 . 01 . 2026</h3>
                         </div>
                         <div id="HEADLINE103" class='ladi-element'>
                             <h3 class='ladi-headline'>Tại: Tư Gia Nhà GÁI</h3>
                         </div>
                         <div id="HEADLINE104" class='ladi-element'>
-                            <h3 class='ladi-headline'>(Tức ngày 05 tháng 09 năm Ất Tỵ )</h3>
+                            <h3 class='ladi-headline'>(Tức ngày 19 tháng 12 năm Ất Tỵ )</h3>
                         </div>
                         <div data-action="true" id="BUTTON11" class='ladi-element'>
                             <div class='ladi-button ladi-transition'>
@@ -5404,15 +5422,15 @@
                     <h3 class='ladi-headline'>HÔN LỄ ĐƯỢC DIỄN RA</h3>
                 </div>
                 <div id="HEADLINE40" class='ladi-element'>
-                    <h3 class='ladi-headline ladi-transition'>Vào Lúc: 10:30 | Chủ Nhật<br></h3>
+                    <h3 class='ladi-headline ladi-transition'>Vào Lúc: Chủ Tư<br></h3>
                 </div>
                 <div id="HEADLINE41" class='ladi-element'>
-                    <h3 class='ladi-headline ladi-transition'>Tháng 10<br></h3>
+                    <h3 class='ladi-headline ladi-transition'>Tháng 01<br></h3>
                 </div>
                 <div id="GROUP10" class='ladi-element'>
                     <div class='ladi-group'>
                         <div id="HEADLINE42" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>26<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>28<br></h3>
                         </div>
                         <div id="LINE4" class='ladi-element'>
                             <div class='ladi-line'>
@@ -5427,10 +5445,10 @@
                     </div>
                 </div>
                 <div id="HEADLINE43" class='ladi-element'>
-                    <h3 class='ladi-headline ladi-transition'>2025<br></h3>
+                    <h3 class='ladi-headline ladi-transition'>2026<br></h3>
                 </div>
                 <div id="HEADLINE44" class='ladi-element'>
-                    <h3 class='ladi-headline'>(Tức ngày 06 tháng 09 năm Ất Tỵ )</h3>
+                    <h3 class='ladi-headline'>(Tức ngày 20 tháng 12 năm Ất Tỵ )</h3>
                 </div>
                 <div id="GROUP12" class='ladi-element'>
                     <div class='ladi-group'>
@@ -5472,7 +5490,7 @@
                     <h3 class='ladi-headline ladi-transition'>Đếm ngược ngày cưới</h3>
                 </div>
                 <div id="HEADLINE45" class='ladi-element'>
-                    <h3 class='ladi-headline ladi-transition'>Ngày 26<br>tháng 10 . 2025<br></h3>
+                    <h3 class='ladi-headline ladi-transition'>Ngày 28<br>tháng 01 . 2026<br></h3>
                 </div>
                 <div id="GROUP14" class='ladi-element'>
                     <div class='ladi-group'>
@@ -5515,100 +5533,100 @@
                             <h3 class='ladi-headline ladi-transition'></h3>
                         </div>
                         <div id="HEADLINE55" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>1</h3>
+                            <h3 class='ladi-headline ladi-transition'></h3>
                         </div>
                         <div id="HEADLINE56" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>2</h3>
+                            <h3 class='ladi-headline ladi-transition'>1</h3>
                         </div>
                         <div id="HEADLINE57" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>3</h3>
+                            <h3 class='ladi-headline ladi-transition'>2</h3>
                         </div>
                         <div id="HEADLINE58" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>4<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>3<br></h3>
                         </div>
                         <div id="HEADLINE59" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>5<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>4<br></h3>
                         </div>
                         <div id="HEADLINE60" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>12</h3>
+                            <h3 class='ladi-headline ladi-transition'>11</h3>
                         </div>
                         <div id="HEADLINE61" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>11<br></h3>
-                        </div>
-                        <div id="HEADLINE62" class='ladi-element'>
                             <h3 class='ladi-headline ladi-transition'>10<br></h3>
                         </div>
-                        <div id="HEADLINE63" class='ladi-element'>
+                        <div id="HEADLINE62" class='ladi-element'>
                             <h3 class='ladi-headline ladi-transition'>9<br></h3>
                         </div>
-                        <div id="HEADLINE64" class='ladi-element'>
+                        <div id="HEADLINE63" class='ladi-element'>
                             <h3 class='ladi-headline ladi-transition'>8<br></h3>
                         </div>
-                        <div id="HEADLINE65" class='ladi-element'>
+                        <div id="HEADLINE64" class='ladi-element'>
                             <h3 class='ladi-headline ladi-transition'>7<br></h3>
                         </div>
-                        <div id="HEADLINE66" class='ladi-element'>
+                        <div id="HEADLINE65" class='ladi-element'>
                             <h3 class='ladi-headline ladi-transition'>6<br></h3>
                         </div>
+                        <div id="HEADLINE66" class='ladi-element'>
+                            <h3 class='ladi-headline ladi-transition'>5<br></h3>
+                        </div>
                         <div id="HEADLINE67" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>13<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>12<br></h3>
                         </div>
                         <div id="HEADLINE68" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>14<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>13<br></h3>
                         </div>
                         <div id="HEADLINE69" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>15<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>14<br></h3>
                         </div>
                         <div id="HEADLINE70" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>16<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>15<br></h3>
                         </div>
                         <div id="HEADLINE71" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>17<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>16<br></h3>
                         </div>
                         <div id="HEADLINE72" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>18<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>17<br></h3>
                         </div>
                         <div id="HEADLINE73" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>19</h3>
+                            <h3 class='ladi-headline ladi-transition'>18</h3>
                         </div>
                         <div id="HEADLINE74" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>20<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>19<br></h3>
                         </div>
                         <div id="HEADLINE75" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>21<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>20<br></h3>
                         </div>
                         <div id="HEADLINE76" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>22<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>21<br></h3>
                         </div>
                         <div id="HEADLINE77" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>23<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>22<br></h3>
                         </div>
                         <div id="HEADLINE78" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>24<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>23<br></h3>
                         </div>
                         <div id="HEADLINE79" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>25<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>24<br></h3>
                         </div>
                         <div id="HEADLINE80" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>26<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>25<br></h3>
                         </div>
                         <div id="HEADLINE81" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>27<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>26<br></h3>
                         </div>
                         <div id="HEADLINE82" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>28<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>27<br></h3>
                         </div>
                         <div id="HEADLINE83" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>29<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>28<br></h3>
                         </div>
                         <div id="HEADLINE84" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>30<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>29<br></h3>
                         </div>
                         <div id="HEADLINE85" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'>31<br></h3>
+                            <h3 class='ladi-headline ladi-transition'>30<br></h3>
                         </div>
                         <div id="HEADLINE86" class='ladi-element'>
-                            <h3 class='ladi-headline ladi-transition'></h3>
+                            <h3 class='ladi-headline ladi-transition'>31</h3>
                         </div>
                         <div id="HEADLINE87" class='ladi-element'>
                             <h3 class='ladi-headline ladi-transition'></h3>
@@ -6504,52 +6522,66 @@
     </style>
     <script src="https://w.ladicdn.com/v5/source/ladipagev3.min.js?v=1756440110334" type="text/javascript"></script>
     <script id="script_event_data"
-        type="application/json">{"SECTION1":{"a":"section","cf":"https://s.ladicdn.com/689218c23c46d40012eac1e2/pink-and-beige-cute-aesthetic-background-your-story-20250818034023-aioxq.mp4","ce":"direct","d":"image"},"HEADLINE3":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInDown","A":"0s"},"HEADLINE4":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInDown","A":"0.3s"},"IMAGE1":{"a":"image","D":"fadeInUp","A":"0.6s"},"HEADLINE5":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInLeft","A":"0.9s"},"LINE1":{"a":"line","D":"bounceIn","A":"1.2s"},"HEADLINE6":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInLeft","A":"1.5s"},"HEADLINE8":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInDown","A":"0s"},"IMAGE4":{"a":"image","cs":[{"dr":"action","dC":"img/2.jpg","dF":"image","a":"lightbox"}],"D":"fadeInLeft","A":"0.4s"},"HEADLINE9":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE10":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE11":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE12":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP1":{"a":"group","D":"fadeInLeft","A":"0.7s"},"GROUP2":{"a":"group","D":"fadeInLeft","A":"00.6s"},"IMAGE5":{"a":"image","cs":[{"dr":"action","dC":"img/10.jpg","dF":"image","a":"lightbox"}],"D":"fadeInRight","A":"0.8s"},"HEADLINE15":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE16":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP6":{"a":"group","D":"fadeInRight","A":"1s"},"HEADLINE17":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE18":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP7":{"a":"group","D":"fadeInRight","A":"1.1s"},"LINE2":{"a":"line","D":"fadeInDown","A":"0s"},"HEADLINE19":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInDown","A":"0.3s"},"BUTTON_TEXT2":{"option.is_product_mapping_name_custom":true,"a":"headline"},"FORM_ITEM2":{"a":"form_item","bS":"text","bR":"Quý khách","bQ":2},"FORM2":{"option.dynamic_form_config":"&#123;&#34;configs&#34;:[],&#34;default_actions&#34;:[&#123;&#34;text_thankyou_value&#34;:&#34;Cảm ơn bạn đã quan tâm!&#34;,&#34;type&#34;:&#34;form_show_popup_default&#34;,&#34;no_delete&#34;:true&#125;]&#125;","a":"form","bM":true,"by":true,"bx":true,"D":"fadeInDown","A":"0.6s"},"HEADLINE20":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInDown","A":"00.9s"},"IMAGE6":{"a":"image","cs":[{"dr":"action","dC":"img/1.jpg","dF":"image","a":"lightbox"}],"D":"fadeInUp","A":"1.2s"},"IMAGE7":{"a":"image","cs":[{"dr":"action","dC":"img/8.jpg","dF":"image","a":"lightbox"}],"D":"fadeInRight","A":"1.5s"},"IMAGE8":{"a":"image","cs":[{"dr":"action","dC":"img/9.jpg","dF":"image","a":"lightbox"}],"D":"fadeInLeft","A":"1.5s"},"HEADLINE21":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE22":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE23":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE24":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE25":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON_TEXT3":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON3":{"a":"button","cs":[{"dr":"action","dw":"XNTD","a":"popup"}]},"GROUP8":{"a":"group","D":"slideInUp","A":"0s"},"BOX3":{"a":"box","cs":[{"dr":"action","a":"lightbox"}]},"BOX4":{"a":"box","cs":[{"dr":"action","a":"lightbox"}]},"HEADLINE31":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE32":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON7":{"a":"button","cs":[{"dr":"action","a":"copy_clipboard"}]},"BUTTON_TEXT7":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON8":{"a":"button","cs":[{"dr":"action","a":"lightbox"}]},"BUTTON_TEXT8":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON9":{"a":"button","cs":[{"dr":"action","a":"copy_clipboard"}]},"BUTTON_TEXT9":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON10":{"a":"button","cs":[{"dr":"action","a":"lightbox"}]},"BUTTON_TEXT10":{"option.is_product_mapping_name_custom":true,"a":"headline"},"PARAGRAPH1":{"option.is_product_mapping_name_custom":true,"a":"paragraph"},"HOPMUNGCUOI":{"a":"popup","X":"default","U":"background-color: rgba(0, 0, 0, 0.5);"},"LINE3":{"a":"line","F":"slideInUp","C":"0s"},"HEADLINE39":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"slideInUp","C":"0.2s"},"HEADLINE40":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"slideInUp","C":"0.4s"},"HEADLINE41":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"slideInLeft","C":"00.8s"},"GROUP10":{"a":"group","F":"slideInUp","C":"0.8s"},"HEADLINE42":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE43":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"slideInRight","C":"0.8s"},"HEADLINE44":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"slideInUp","C":"1s"},"SHAPE5":{"a":"shape","F":"pulse","C":"1.6s"},"HEADLINE45":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"slideInUp","A":"1.2s"},"HEADLINE46":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE47":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE48":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE49":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE50":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE51":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE52":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE53":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE54":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE55":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE56":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE57":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE58":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE59":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE60":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE61":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE62":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE63":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE64":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE65":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE66":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE67":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE68":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE69":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE70":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE71":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE72":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE73":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE74":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE75":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE76":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE77":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE78":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE79":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE80":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE81":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE82":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE83":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE84":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE85":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE86":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE87":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE88":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE89":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE90":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE91":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE92":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE93":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE94":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP12":{"a":"group","F":"slideInUp","C":"1.6s"},"COUNTDOWN1":{"a":"countdown","bX":"countdown","bW":91543},"COUNTDOWN_ITEM1":{"a":"countdown_item","bY":"day"},"COUNTDOWN_ITEM2":{"a":"countdown_item","bY":"hour"},"COUNTDOWN_ITEM3":{"a":"countdown_item","bY":"minute"},"COUNTDOWN_ITEM4":{"a":"countdown_item","bY":"seconds"},"HEADLINE95":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE96":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE97":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE98":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE99":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"slideInUp","C":"1.5s"},"HEADLINE100":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE101":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE102":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE103":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE104":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON_TEXT11":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON11":{"a":"button","cs":[{"dr":"action","dw":"XNTD","a":"popup"}]},"GROUP13":{"a":"group","D":"slideInUp","A":"0.5s"},"GROUP14":{"a":"group","D":"slideInUp","A":"1.4s"},"HEADLINE105":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE106":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE107":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON_TEXT13":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP15":{"a":"group","D":"fadeInUp","A":"0.5s"},"HEADLINE108":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE109":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON_TEXT14":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP16":{"a":"group","D":"fadeInUp","A":"0.8s"},"LINE6":{"a":"line","F":"slideInUp","C":"0s"},"BUTTON_TEXT15":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON15":{"a":"button","cs":[{"dr":"action","dw":"HOPMUNGCUOI","a":"popup"}],"D":"fadeInUp","A":"1.1s"},"GROUP17":{"a":"group","D":"slideInUp","A":"0s"},"GROUP18":{"a":"group","F":"slideInRight","C":"0s"},"HEADLINE110":{"option.is_product_mapping_name_custom":true,"a":"headline"},"IMAGE13":{"a":"image","F":"fadeInLeft","C":"0.5s"},"IMAGE14":{"a":"image","F":"fadeInRight","C":"0.5s"},"IMAGE15":{"a":"image","F":"fadeInLeft","C":"1s"},"IMAGE16":{"a":"image","F":"fadeInRight","C":"1s"},"IMAGE17":{"a":"image","F":"fadeInRight","C":"1.2s"},"IMAGE18":{"a":"image","F":"fadeInLeft","C":"1.2s"},"IMAGE19":{"a":"image","F":"fadeInRight","C":"1.4s"},"IMAGE20":{"a":"image","F":"fadeInLeft","C":"1.4s"},"BUTTON16":{"a":"button","cs":[{"dr":"action","dw":"Album","a":"popup"}],"F":"pulse","C":"1s"},"BUTTON_TEXT16":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GALLERY1":{"a":"gallery","ah":true,"ae":5},"Album":{"a":"popup","X":"default","U":"background-color: rgba(0, 0, 0, 0.5);"},"HEADLINE112":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE113":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP19":{"a":"group","D":"fadeInUp","A":"0s"},"FORM3":{"option.use_data_leads":true,"option.dynamic_form_config":"&#123;&#34;configs&#34;:[],&#34;default_actions&#34;:[&#123;&#34;text_thankyou_value&#34;:&#34;Cảm ơn bạn đã quan tâm!&#34;,&#34;type&#34;:&#34;form_open_popup&#34;,&#34;no_delete&#34;:true,&#34;id_open_popup&#34;:&#34;POPUP4&#34;&#125;]&#125;","a":"form","bP":"6899c1274279f900200e170e","bM":true,"by":true,"bx":true},"BUTTON_TEXT17":{"option.is_product_mapping_name_custom":true,"a":"headline"},"FORM_ITEM3":{"a":"form_item","bS":"text","bQ":1},"FORM_ITEM4":{"a":"form_item","bS":"textarea","bQ":3},"FORM_ITEM5":{"a":"form_item","bS":"radio","bQ":3},"XNTD":{"a":"popup","X":"default","U":"background-color: rgba(0, 0, 0, 0.5);"},"GROUP20":{"a":"group","cs":[{"dr":"action","dw":"SECTION1","a":"section"}],"aB":true,"ax":"bottom_right","au":"0px","ar":"0px","ao":"15px","al":"15px","D":"bounce","A":"0s"},"POPUP4":{"a":"popup","X":"default","U":"background-color: rgba(0, 0, 0, 0.5);"},"HEADLINE118":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"fadeInDown","C":"0s"},"HEADLINE119":{"option.is_product_mapping_name_custom":true,"a":"headline"},"SHAPE10":{"a":"shape","cs":[{"dr":"action","dv":"_blank","dw":"https://www.tiktok.com/@nhacohyonline","a":"link"}]},"SHAPE11":{"a":"shape","cs":[{"dr":"action","dv":"_blank","dw":"https://www.facebook.com/thiepcuoionlinenhacohy","a":"link"}]},"SHAPE12":{"a":"shape","cs":[{"dr":"action","dv":"_blank","dw":"https://zalo.me/0397336324","a":"link"}]},"HEADLINE120":{"option.is_product_mapping_name_custom":true,"a":"headline"}}</script>
+        type="application/json">{"SECTION1":{"a":"section","cf":"https://s.ladicdn.com/689218c23c46d40012eac1e2/pink-and-beige-cute-aesthetic-background-your-story-20250818034023-aioxq.mp4","ce":"direct","d":"image"},"HEADLINE3":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInDown","A":"0s"},"HEADLINE4":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInDown","A":"0.3s"},"IMAGE1":{"a":"image","D":"fadeInUp","A":"0.6s"},"HEADLINE5":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInLeft","A":"0.9s"},"LINE1":{"a":"line","D":"bounceIn","A":"1.2s"},"HEADLINE6":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInLeft","A":"1.5s"},"HEADLINE8":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInDown","A":"0s"},"IMAGE4":{"a":"image","cs":[{"dr":"action","dC":"img/2.jpg","dF":"image","a":"lightbox"}],"D":"fadeInLeft","A":"0.4s"},"HEADLINE9":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE10":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE11":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE12":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP1":{"a":"group","D":"fadeInLeft","A":"0.7s"},"GROUP2":{"a":"group","D":"fadeInLeft","A":"00.6s"},"IMAGE5":{"a":"image","cs":[{"dr":"action","dC":"img/10.jpg","dF":"image","a":"lightbox"}],"D":"fadeInRight","A":"0.8s"},"HEADLINE15":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE16":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP6":{"a":"group","D":"fadeInRight","A":"1s"},"HEADLINE17":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE18":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP7":{"a":"group","D":"fadeInRight","A":"1.1s"},"LINE2":{"a":"line","D":"fadeInDown","A":"0s"},"HEADLINE19":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInDown","A":"0.3s"},"BUTTON_TEXT2":{"option.is_product_mapping_name_custom":true,"a":"headline"},"FORM_ITEM2":{"a":"form_item","bS":"text","bR":"Quý khách","bQ":2},"FORM2":{"option.dynamic_form_config":"&#123;&#34;configs&#34;:[],&#34;default_actions&#34;:[&#123;&#34;text_thankyou_value&#34;:&#34;Cảm ơn bạn đã quan tâm!&#34;,&#34;type&#34;:&#34;form_show_popup_default&#34;,&#34;no_delete&#34;:true&#125;]&#125;","a":"form","bM":true,"by":true,"bx":true,"D":"fadeInDown","A":"0.6s"},"HEADLINE20":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"fadeInDown","A":"00.9s"},"IMAGE6":{"a":"image","cs":[{"dr":"action","dC":"img/1.jpg","dF":"image","a":"lightbox"}],"D":"fadeInUp","A":"1.2s"},"IMAGE7":{"a":"image","cs":[{"dr":"action","dC":"img/8.jpg","dF":"image","a":"lightbox"}],"D":"fadeInRight","A":"1.5s"},"IMAGE8":{"a":"image","cs":[{"dr":"action","dC":"img/9.jpg","dF":"image","a":"lightbox"}],"D":"fadeInLeft","A":"1.5s"},"HEADLINE21":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE22":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE23":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE24":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE25":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON_TEXT3":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON3":{"a":"button","cs":[{"dr":"action","dw":"XNTD","a":"popup"}]},"GROUP8":{"a":"group","D":"slideInUp","A":"0s"},"BOX3":{"a":"box","cs":[{"dr":"action","a":"lightbox"}]},"BOX4":{"a":"box","cs":[{"dr":"action","a":"lightbox"}]},"HEADLINE31":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE32":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON7":{"a":"button","cs":[{"dr":"action","a":"copy_clipboard"}]},"BUTTON_TEXT7":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON8":{"a":"button","cs":[{"dr":"action","a":"lightbox"}]},"BUTTON_TEXT8":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON9":{"a":"button","cs":[{"dr":"action","a":"copy_clipboard"}]},"BUTTON_TEXT9":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON10":{"a":"button","cs":[{"dr":"action","a":"lightbox"}]},"BUTTON_TEXT10":{"option.is_product_mapping_name_custom":true,"a":"headline"},"PARAGRAPH1":{"option.is_product_mapping_name_custom":true,"a":"paragraph"},"HOPMUNGCUOI":{"a":"popup","X":"default","U":"background-color: rgba(0, 0, 0, 0.5);"},"LINE3":{"a":"line","F":"slideInUp","C":"0s"},"HEADLINE39":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"slideInUp","C":"0.2s"},"HEADLINE40":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"slideInUp","C":"0.4s"},"HEADLINE41":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"slideInLeft","C":"00.8s"},"GROUP10":{"a":"group","F":"slideInUp","C":"0.8s"},"HEADLINE42":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE43":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"slideInRight","C":"0.8s"},"HEADLINE44":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"slideInUp","C":"1s"},"SHAPE5":{"a":"shape","F":"pulse","C":"1.6s"},"HEADLINE45":{"option.is_product_mapping_name_custom":true,"a":"headline","D":"slideInUp","A":"1.2s"},"HEADLINE46":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE47":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE48":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE49":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE50":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE51":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE52":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE53":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE54":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE55":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE56":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE57":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE58":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE59":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE60":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE61":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE62":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE63":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE64":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE65":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE66":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE67":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE68":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE69":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE70":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE71":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE72":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE73":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE74":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE75":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE76":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE77":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE78":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE79":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE80":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE81":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE82":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE83":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE84":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE85":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE86":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE87":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE88":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE89":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE90":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE91":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE92":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE93":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE94":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP12":{"a":"group","F":"slideInUp","C":"1.6s"},"HEADLINE95":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE96":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE97":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE98":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE99":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"slideInUp","C":"1.5s"},"HEADLINE100":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE101":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE102":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE103":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE104":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON_TEXT11":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON11":{"a":"button","cs":[{"dr":"action","dw":"XNTD","a":"popup"}]},"GROUP13":{"a":"group","D":"slideInUp","A":"0.5s"},"GROUP14":{"a":"group","D":"slideInUp","A":"1.4s"},"HEADLINE105":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE106":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE107":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON_TEXT13":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP15":{"a":"group","D":"fadeInUp","A":"0.5s"},"HEADLINE108":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE109":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON_TEXT14":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP16":{"a":"group","D":"fadeInUp","A":"0.8s"},"LINE6":{"a":"line","F":"slideInUp","C":"0s"},"BUTTON_TEXT15":{"option.is_product_mapping_name_custom":true,"a":"headline"},"BUTTON15":{"a":"button","cs":[{"dr":"action","dw":"HOPMUNGCUOI","a":"popup"}],"D":"fadeInUp","A":"1.1s"},"GROUP17":{"a":"group","D":"slideInUp","A":"0s"},"GROUP18":{"a":"group","F":"slideInRight","C":"0s"},"HEADLINE110":{"option.is_product_mapping_name_custom":true,"a":"headline"},"IMAGE13":{"a":"image","F":"fadeInLeft","C":"0.5s"},"IMAGE14":{"a":"image","F":"fadeInRight","C":"0.5s"},"IMAGE15":{"a":"image","F":"fadeInLeft","C":"1s"},"IMAGE16":{"a":"image","F":"fadeInRight","C":"1s"},"IMAGE17":{"a":"image","F":"fadeInRight","C":"1.2s"},"IMAGE18":{"a":"image","F":"fadeInLeft","C":"1.2s"},"IMAGE19":{"a":"image","F":"fadeInRight","C":"1.4s"},"IMAGE20":{"a":"image","F":"fadeInLeft","C":"1.4s"},"BUTTON16":{"a":"button","cs":[{"dr":"action","dw":"Album","a":"popup"}],"F":"pulse","C":"1s"},"BUTTON_TEXT16":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GALLERY1":{"a":"gallery","ah":true,"ae":5},"Album":{"a":"popup","X":"default","U":"background-color: rgba(0, 0, 0, 0.5);"},"HEADLINE112":{"option.is_product_mapping_name_custom":true,"a":"headline"},"HEADLINE113":{"option.is_product_mapping_name_custom":true,"a":"headline"},"GROUP19":{"a":"group","D":"fadeInUp","A":"0s"},"FORM3":{"option.use_data_leads":true,"option.dynamic_form_config":"&#123;&#34;configs&#34;:[],&#34;default_actions&#34;:[&#123;&#34;text_thankyou_value&#34;:&#34;Cảm ơn bạn đã quan tâm!&#34;,&#34;type&#34;:&#34;form_open_popup&#34;,&#34;no_delete&#34;:true,&#34;id_open_popup&#34;:&#34;POPUP4&#34;&#125;]&#125;","a":"form","bP":"6899c1274279f900200e170e","bM":true,"by":true,"bx":true},"BUTTON_TEXT17":{"option.is_product_mapping_name_custom":true,"a":"headline"},"FORM_ITEM3":{"a":"form_item","bS":"text","bQ":1},"FORM_ITEM4":{"a":"form_item","bS":"textarea","bQ":3},"FORM_ITEM5":{"a":"form_item","bS":"radio","bQ":3},"XNTD":{"a":"popup","X":"default","U":"background-color: rgba(0, 0, 0, 0.5);"},"GROUP20":{"a":"group","cs":[{"dr":"action","dw":"SECTION1","a":"section"}],"aB":true,"ax":"bottom_right","au":"0px","ar":"0px","ao":"15px","al":"15px","D":"bounce","A":"0s"},"POPUP4":{"a":"popup","X":"default","U":"background-color: rgba(0, 0, 0, 0.5);"},"HEADLINE118":{"option.is_product_mapping_name_custom":true,"a":"headline","F":"fadeInDown","C":"0s"},"HEADLINE119":{"option.is_product_mapping_name_custom":true,"a":"headline"},"SHAPE10":{"a":"shape","cs":[{"dr":"action","dv":"_blank","dw":"https://www.tiktok.com/@nhacohyonline","a":"link"}]},"SHAPE11":{"a":"shape","cs":[{"dr":"action","dv":"_blank","dw":"https://www.facebook.com/thiepcuoionlinenhacohy","a":"link"}]},"SHAPE12":{"a":"shape","cs":[{"dr":"action","dv":"_blank","dw":"https://zalo.me/0397336324","a":"link"}]},"HEADLINE120":{"option.is_product_mapping_name_custom":true,"a":"headline"}}</script>
     <script id="script_ladipage_run"
         type="text/javascript">(function () { var run = function () { if (typeof window.LadiPageScript == "undefined" || typeof window.ladi == "undefined" || window.ladi == undefined) { setTimeout(run, 100); return; } window.LadiPageApp = window.LadiPageApp || new window.LadiPageAppV2(); window.LadiPageScript.runtime.ladipage_id = '68a2a04b96468b00b065a19f'; window.LadiPageScript.runtime.publish_platform = 'LADIPAGEDNS'; window.LadiPageScript.runtime.is_mobile_only = true; window.LadiPageScript.runtime.version = '1756440110334'; window.LadiPageScript.runtime.cdn_url = 'https://w.ladicdn.com/v5/source/'; window.LadiPageScript.runtime.DOMAIN_SET_COOKIE = ["nhacohy.vn"]; window.LadiPageScript.runtime.DOMAIN_FREE = ["preview.ldpdemo.com", "ldp.page"]; window.LadiPageScript.runtime.bodyFontSize = 12; window.LadiPageScript.runtime.store_id = "689218c23c46d40012eac1e2"; window.LadiPageScript.runtime.store_ladiuid = "689218c05120b6001245e6cd"; window.LadiPageScript.runtime.time_zone = 7; window.LadiPageScript.runtime.currency = "VND"; window.LadiPageScript.runtime.convert_replace_str = true; window.LadiPageScript.runtime.desktop_width = 960; window.LadiPageScript.runtime.mobile_width = 420; window.LadiPageScript.runtime.formdata = true; window.LadiPageScript.runtime.tracking_button_click = true; window.LadiPageScript.runtime.publish_time = 1756801310850; window.LadiPageScript.runtime.lang = "vi"; window.LadiPageScript.run(true); window.LadiPageScript.runEventScroll(); }; run(); })();</script>
     <script>
-        // Đặt ngày đích (năm, tháng-1, ngày, giờ, phút, giây)
-        const countDownDate = new Date(2025, 9, 26, 10, 30, 0).getTime();
-        
-        // Cache DOM elements
-        const daysEl = document.querySelector("#COUNTDOWN_ITEM1 .ladi-countdown-text span");
-        const hoursEl = document.querySelector("#COUNTDOWN_ITEM2 .ladi-countdown-text span");
-        const minutesEl = document.querySelector("#COUNTDOWN_ITEM3 .ladi-countdown-text span");
-        const secondsEl = document.querySelector("#COUNTDOWN_ITEM4 .ladi-countdown-text span");
-        
-        function updateCountdown() {
-            // Lấy thời gian hiện tại
-            const now = new Date().getTime();
+        // Sử dụng mã này để tùy chỉnh countdown
+        // Override countdown với ngày cưới chính xác
+        function initCustomCountdown() {
+            // Đặt ngày cưới: 18/01/2026 13:22:00
+            // new Date(năm, tháng, ngày, giờ, phút, giây)
+            // 2026 = năm 2026
+            // 0 = tháng 1 (JavaScript tính từ 0, nên 0=Jan, 1=Feb...11=Dec)
+            // 18 = ngày 18
+            // 13 = giờ 13 (13:00 = 1 giờ chiều)
+            // 22 = phút 22
+            // 0 = giây 0
+            const weddingDate = new Date(2026, 0, 28, 10, 0, 0).getTime();
             
-            // Tính khoảng cách giữa thời gian hiện tại và ngày đích
-            const distance = countDownDate - now;
-            
-            if (distance < 0) {
-                clearInterval(x);
-                document.querySelector("#COUNTDOWN1").innerHTML = "CHÚC MỪNG HẠNH PHÚC";
-                return;
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = weddingDate - now;
+                
+                if (distance < 0) {
+                    // Đã qua ngày cưới
+                    document.querySelector("#COUNTDOWN1").innerHTML = "CHÚC MỪNG HẠNH PHÚC";
+                    return;
+                }
+                
+                // Tính toán
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                // Cập nhật DOM
+                const dayEl = document.querySelector("#COUNTDOWN_ITEM1 .ladi-countdown-text span");
+                const hourEl = document.querySelector("#COUNTDOWN_ITEM2 .ladi-countdown-text span");
+                const minEl = document.querySelector("#COUNTDOWN_ITEM3 .ladi-countdown-text span");
+                const secEl = document.querySelector("#COUNTDOWN_ITEM4 .ladi-countdown-text span");
+                
+                if (dayEl) dayEl.textContent = days;
+                if (hourEl) hourEl.textContent = hours;
+                if (minEl) minEl.textContent = minutes;
+                if (secEl) secEl.textContent = seconds;
             }
-
-            // Tính toán ngày, giờ, phút, giây
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            // Update elements only if value has changed
-            if (daysEl.textContent !== days.toString()) daysEl.textContent = days;
-            if (hoursEl.textContent !== hours.toString()) hoursEl.textContent = hours;
-            if (minutesEl.textContent !== minutes.toString()) minutesEl.textContent = minutes;
-            if (secondsEl.textContent !== seconds.toString()) secondsEl.textContent = seconds;
+            
+            // Cập nhật lần đầu
+            updateCountdown();
+            
+            // Cập nhật mỗi giây
+            setInterval(updateCountdown, 1000);
         }
-
-        // Initial update
-        updateCountdown();
         
-        // Update every second
-        const x = setInterval(updateCountdown, 1000);
+        // Chạy khi DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCustomCountdown);
+        } else {
+            // DOM đã sẵn sàng
+            setTimeout(initCustomCountdown, 500);
+        }
     </script>
-
     </script>
     <div class="snowflakes" aria-hidden="true">
         <div class="snowflakes" aria-hidden="true">
